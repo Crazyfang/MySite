@@ -2,6 +2,8 @@
 
 {% block title %}blog titles{% endblock %}
 
+{% load staticfiles %}
+
 {% block content %}
     <div class="row text-center vertical-middle-sm">
         <h1>我的博客</h1>
@@ -10,14 +12,15 @@
         <div class="col-xs-12 col-md-8">
             <ul>
                 {% for blog in blogs %}
-                    <li>{{blog.title}}</li>
+                    <li><a href="{{ blog.id }}">{{blog.title}}</a></li>
                 {% endfor %}
             </ul>
         </div>
         <div class="col-xs-6 col-md-4">
             <h2>广告</h2>
             <p>跟老方学python</p>
-            <img width="200px" src="http://www.mrwallpaper.com/wallpapers/Fluffy-Cat.jpg">
+            <img width="200px" src="{% static '/images/head.jpg' %}">
+{#            <img width="200px" src="../../static/images/head.jpg">#}
         </div>
     </div>
 {% endblock %}
