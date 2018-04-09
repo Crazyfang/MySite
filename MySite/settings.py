@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'blog',
     'account',
+    'password_reset',
 ]
 
 MIDDLEWARE = [
@@ -107,8 +108,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
+# LANGUAGE_CODE = 'zh-CN'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 
@@ -124,3 +126,13 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
+
+LOGIN_REDIRECT_URL = '/account/login'
+
+EMAIL_HOST = 'smtp.sina.com'
+EMAIL_HOST_USER = "fangyonglubu@sina.com"
+EMAIL_HOST_PASSWORD='qweASD123' #密码
+EMAIL_PORT = 25
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = "fangyonglubu@sina.com"
+EMAIL_BACKEND= "django.core.mail.backends.smtp.EmailBackend"
