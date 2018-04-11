@@ -6,12 +6,14 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .models import UserInfo, UserProfile
 from .forms import UserForm, UserProfileForm, UserInfoForm
+from django.core.urlresolvers import reverse
 
 
 # Create your views here.
 def user_login(request):
     if request.method == 'POST':
         login_form = LoginForm(request.POST)
+
         if login_form.is_valid():
             cd = login_form.cleaned_data
             user = authenticate(username=cd['username'], password=cd['password'])
@@ -38,7 +40,7 @@ def register(request):
             new_profile.user = new_user
             new_profile.save()
             UserInfo.objects.create(user=new_user)
-            return HttpResponse('successfully')
+            return HttpResponseRedirect(reverse('account:user_login'))
         else:
             return HttpResponse('sorry, you can not register.')
     else:
@@ -46,16 +48,17 @@ def register(request):
         userprofile_form = UserProfileForm()
         return render(request, 'account/register.html', {'form': user_form, 'profile': userprofile_form})
 
+
 def user_logout(request):
     logout(request)
-    return HttpResponseRedirect(reversed('account:user_login'))
+    return HttpResponseRedirect(reversed('home'))
 
 
 @login_required(login_url='/account/login/')
 def myself(request):
     user = User.objects.get(username=request.user.username)
-    userprofile = UserProfile.objects.get(user=user)
-    userinfo = UserInfo.objects.get(user=user)
+    userprofile = UserProfile.objects.filter(user=user)
+    userinfo = UserInfo.objects.filter(user=user)
 
     return render(request, 'account/myself.html', {'user':user, 'userinfo':userinfo, 'userprofile': userprofile})
 

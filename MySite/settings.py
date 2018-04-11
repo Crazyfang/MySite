@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'blog',
     'account',
     'password_reset',
+    'article',
 ]
 
 MIDDLEWARE = [
@@ -127,11 +128,11 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 
-LOGIN_REDIRECT_URL = '/account/login'
+LOGIN_REDIRECT_URL = '/home/'
 
 EMAIL_HOST = 'smtp.sina.com'
 EMAIL_HOST_USER = "fangyonglubu@sina.com"
-EMAIL_HOST_PASSWORD='qweASD123' #密码
+EMAIL_HOST_PASSWORD='qweASD123'             #密码
 EMAIL_PORT = 25
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = "fangyonglubu@sina.com"
