@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{#{% load article_tags %}#}
+{% load article_tags %}
 {% load staticfiles %}
 
 {% block title %}articles{% endblock %}
@@ -24,12 +24,12 @@
     {% if userinfo.photo %}
     <img src="{{ userinfo.photo | striptags }}" class="img-circle" id="my_photo" name="user_face" style="height: 200px">
     {% else %}
-    <img name="user_face" src="{% static 'images/newton.jpg' %}" class="img-circle" id="my_photo">
+    <img name="user_face" src="{% static 'images/newton.jpg' %}" class="img-circle" id="my_photo" style="height: 200px">
     {% endif %}
 </div>
 <div>
     <p>{{ user.username }}</p>
-{#    <p>共发表文章{% author_total_articles user %}篇</p>#}
+    <p>共发表文章{% author_total_articles user %}篇</p>
     {% if userinfo %}
     <p>{{ userinfo.company }}
     <p>{{ userinfo.aboutme }}</p>
