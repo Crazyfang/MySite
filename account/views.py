@@ -20,7 +20,7 @@ def user_login(request):
 
             if user:
                 login(request, user)
-                # return render(request, 'account/login.html', {'form':login_form})
+                return render(request, 'account/login.html', {'form':login_form})
             else:
                 return HttpResponse('Sorry, you username or password is not right.')
     else:

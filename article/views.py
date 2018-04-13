@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .models import ArticleColumn, ArticlePost, Comment
-from .forms import ArticleColumnForm, ArticlePostForm, CommentForm
+from .models import ArticleColumn, ArticlePost, Comment, ArticleTag
+from .forms import ArticleColumnForm, ArticlePostForm, CommentForm, ArticleTagForm
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from django.views.decorators.http import require_POST
@@ -9,6 +9,8 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.models import User
 from django.conf import settings
 import redis
+import json
+from django.db.models import Count
 
 r = redis.StrictRedis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=settings.REDIS_DB)
 
@@ -75,6 +77,11 @@ def article_post(request):
                 new_article.author = request.user
                 new_article.column = request.user.article_column.get(id=request.POST['column_id'])
                 new_article.save()
+                tags = request.POST['tags']
+                if tags:
+                    for atag in json.loads(tags):
+                        tag = request.user.tag.get(tag=atag)
+                        new_article.article_tag.add(tag)
                 return HttpResponse('1')
             except Exception as e:
                 print(e)
@@ -84,7 +91,10 @@ def article_post(request):
     else:
         article_post_form = ArticlePostForm()
         article_column = request.user.article_column.all()
-        return render(request, 'article/column/article_post.html', {'article_post_form': article_post_form, 'article_columns': article_column})
+        article_tags = request.user.tag.all()
+        return render(request, 'article/column/article_post.html', {'article_post_form': article_post_form,
+                                                                    'article_columns': article_column,
+                                                                    'article_tags': article_tags})
 
 
 @login_required(login_url='/account/login/')
@@ -197,10 +207,15 @@ def list_article_detail(request, id, slug):
     else:
         comment_form = CommentForm()
 
+    article_tags_ids = article.article_tag.values_list('id', flat=True)
+    similar_articles = ArticlePost.objects.filter(article_tag__in=article_tags_ids).exclude(id=article.id)
+    similar_articles = similar_articles.annotate(same_tags=Count('article_tag')).order_by('-same_tags', '-created')[:4]
+
     return render(request, 'article/list/article_detail.html', {'article': article,
                                                                 'total_views': total_views,
                                                                 'most_viewed': most_viewed,
-                                                                'comment_form': comment_form})
+                                                                'comment_form': comment_form,
+                                                                'similar_articles': similar_articles})
 
 
 @csrf_exempt
@@ -221,3 +236,40 @@ def like_article(request):
         except:
             return HttpResponse('no')
 
+
+@login_required(login_url='/account/login/')
+@csrf_exempt
+def article_tag(request):
+    if request.method == "GET":
+        article_tags = ArticleTag.objects.filter(author=request.user)
+        article_tag_form = ArticleTagForm()
+        # print(article_tag_form.tag)
+        return render(request, 'article/tag/tag_list.html', {'article_tags': article_tags,
+                                                             'article_tag_form': article_tag_form})
+
+    if request.method == "POST":
+        tag_post_form = ArticleTagForm(data=request.POST)
+        if tag_post_form.is_valid():
+            try:
+                new_tag = tag_post_form.save(commit=False)
+                new_tag.author = request.user
+                new_tag.save()
+                return HttpResponse('1')
+            except Exception as e:
+                # print(e)
+                return HttpResponse('the data cannot be save')
+        else:
+            return HttpResponse('sorry, the form is not vaild.')
+
+
+@login_required(login_url='/account/login/')
+@require_POST
+@csrf_exempt
+def del_article_tag(request):
+    tag_id = request.POST['tag_id']
+    try:
+        tag = ArticleTag.objects.get(id=tag_id)
+        tag.delete()
+        return HttpResponse('1')
+    except:
+        return HttpResponse('2')
