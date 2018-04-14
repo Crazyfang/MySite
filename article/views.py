@@ -10,7 +10,6 @@ from django.contrib.auth.models import User
 from django.conf import settings
 import redis
 import json
-from django.db.models import Count
 
 r = redis.StrictRedis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=settings.REDIS_DB)
 

@@ -18,7 +18,7 @@
 							 <a href="#">课程</a>
 						</li>
 						<li>
-							 <a href="#">文章</a>
+							 <a href="{% url 'article:article_list' %}">文章</a>
 						</li>
 
 					</ul>
@@ -29,7 +29,10 @@
 					</form>
 					<ul class="nav navbar-nav navbar-right">
 						<li>
-							 <a href="#">图片</a>
+							 <a href="{% url 'image:falls_images' %}">图片</a>
+						</li>
+                        <li>
+							 <a href="{% url 'course:about' %}">关于</a>
 						</li>
 						<li class="dropdown">
                             {% if user.is_authenticated %}
