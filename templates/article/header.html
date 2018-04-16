@@ -13,7 +13,7 @@
                     <li><a href="{% url 'blog:blog' %}">BLOG</a></li>
                     <li><a href="{% url 'article:article_column' %}">文章管理</a></li>
                     <li><a href="{% url 'image:list_images' %}">图片管理</a></li>
-                    <li><a href="#">课程管理</a></li>
+                    <li><a href="{% url 'article:article_titles' %}">返回前台</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right" style="margin-right:10px">
                     {% if user.is_authenticated %}

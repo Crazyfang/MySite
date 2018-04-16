@@ -20,12 +20,17 @@ def user_login(request):
 
             if user:
                 login(request, user)
-                return render(request, 'account/login.html', {'form':login_form})
+                # return render(request, 'account/login.html', {'form': login_form})
+                return HttpResponseRedirect(request.session['login_from'])
             else:
                 return HttpResponse('Sorry, you username or password is not right.')
     else:
         login_form = LoginForm()
-        return render(request, 'account/login.html', {'form':login_form})
+        if request.method == 'GET':
+            # print(request.META.get('HTTP_REFERER', '/'), '123')
+            # print(request.META['HTTP_REFERER'])
+            request.session['login_from'] = request.GET.get('next', '/home')
+        return render(request, 'account/login.html', {'form': login_form})
 
 
 def register(request):

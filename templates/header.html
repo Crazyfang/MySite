@@ -14,11 +14,11 @@
 
 				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 					<ul class="nav navbar-nav">
-						<li class="active">
-							 <a href="#">课程</a>
+						<li id="background">
+							 <a href="{% url 'article:article_list' %}">后台</a>
 						</li>
-						<li>
-							 <a href="{% url 'article:article_list' %}">文章</a>
+						<li id="article">
+							 <a href="{% url 'article:article_titles' %}">文章</a>
 						</li>
 
 					</ul>
@@ -28,10 +28,10 @@
 						</div> <button type="submit" class="btn btn-default">Submit</button>
 					</form>
 					<ul class="nav navbar-nav navbar-right">
-						<li>
+						<li id="picture">
 							 <a href="{% url 'image:falls_images' %}">图片</a>
 						</li>
-                        <li>
+                        <li id="about">
 							 <a href="{% url 'course:about' %}">关于</a>
 						</li>
 						<li class="dropdown">
@@ -59,7 +59,7 @@
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li>
-                                         <a href="{% url 'account:user_login' %}">Login</a>
+                                         <a href="{% url 'account:user_login' %}?next={{request.path}}">Login</a>
                                     </li>
                                     <li>
                                          <a href="{% url 'account:user_register' %}">Register</a>

@@ -10,6 +10,7 @@ from django.contrib.auth.models import User
 from django.conf import settings
 import redis
 import json
+from django.db.models import Count
 
 r = redis.StrictRedis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=settings.REDIS_DB)
 
@@ -159,6 +160,7 @@ def redit_article(request, article_id):
 
 
 def article_titles(request, username=None):
+    # print(request.META['HTTP_REFERER'])
     if username:
         user = User.objects.get(username=username)
         articles_title = ArticlePost.objects.filter(author=user)
